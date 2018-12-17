@@ -27,8 +27,8 @@ shinyUI(
         
         
         checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
-                           choices = list("Choice 1" = 1, "Choice 2" = 2, "Choice 3" = 3),
-                           selected = 1),
+                           choices = list("adjective (JJ)" = 1, "noun(NN)" = 2, "proper noun (NNP)" = 3,"adverb (RB)" = 4,"verb (VB)"=5),
+                           selected = c(1,2,3)),
         
         
         fluidRow(column(3, verbatimTextOutput("value")))),
