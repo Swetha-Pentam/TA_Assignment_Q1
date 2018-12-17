@@ -10,24 +10,60 @@
 library(shiny)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
-    ),
+shinyUI(
+  fluidPage(
     
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
-    )
-  )
-))
+    titlePanel("UDPipe NLP workflow"),
+    
+    sidebarLayout( 
+      
+      sidebarPanel(  
+        
+        fileInput("file1", "Choose text File",
+                  multiple = FALSE,
+                  accept = c("text",
+                             "text",
+                             ".txt")),
+        
+        
+        checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
+                           choices = list("Choice 1" = 1, "Choice 2" = 2, "Choice 3" = 3),
+                           selected = 1),
+        
+        
+        fluidRow(column(3, verbatimTextOutput("value")))),
+           # end of sidebar panel
+      
+      
+      mainPanel(
+        
+        tabsetPanel(type = "tabs",
+                    
+                    tabPanel("Overview",
+                             h4(p("Data input")),
+                             p("This app supports only text file and an option to upload the trained udpipe model for different languages.",align="justify"),
+                             p("Please refer to the link below for sample csv file."),
+                             a(href="https://github.com/sudhir-voleti/sample-data-sets/blob/master/Segmentation%20Discriminant%20and%20targeting%20data/ConneCtorPDASegmentation.csv"
+                               ,"Sample data input file"),   
+                             br(),
+                             h4('How to use this App'),
+                             p('To use this app, click on', 
+                               span(strong("Upload data (csv file with header)")),
+                               'and uppload the csv data file. You can also change the number of clusters to fit in k-means clustering')),
+                    tabPanel("Scree plot", 
+                             plotOutput('plot1')),
+                    
+                    tabPanel("Cluster mean",
+                             tableOutput('clust_summary')),
+                    
+                    tabPanel("Data",
+                             dataTableOutput('clust_data'))
+                    
+        ) # end of tabsetPanel
+      )# end of main panel
+    ) # end of sidebarLayout
+  )  # end if fluidPage
+) # end of UI
+
+
+
