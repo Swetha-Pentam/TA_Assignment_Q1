@@ -13,31 +13,42 @@ options(shiny.maxRequestSize=50*1024^2)
 shinyServer(function(input, output) {
   
   Dataset <- reactive({
-    if (is.null(input$file1)) { return(NULL) }
-    else{
-      ip1 = readLines('input$file1.txt')
-      ip  =  str_replace_all(data, "<.*?>", "")
+    if (is.null(input$file1)) {   # locate 'file1' from ui.R
+      
+      return(NULL) } else{
+        
+        if (is.null(input$file2)) {   # locate 'file1' from ui.R
+          
+          return(NULL) } else {
+        ip1 = readLines(input$file1$datapath)
+        ip  =  str_replace_all(ip1, "<.*?>", "")
       # get rid of html junk 
       
-      if (!is.null(input$file2)){
-        model <- readLines('input$file2.txt')
+        model <- udpipe_load_model(input$file2$datapath)
         model_name = udpipe_load_model(model)  # file_model only needed
         
         x <- udpipe_annotate(model_name, x = ip) #%>% as.data.frame() %>% head()
-        Data1 <- as.data.frame(x)
-                      }
+        return(ip)              }
       
-    }
-    return(Data1)
-  }
+    }}
+  
   )
   
   output$plot1 = renderPlot({
-    if (input$checkGroup == 1){
+    
+    
+      table(x$xpos)  # std penn treebank based POStags
+      table(x$upos)  # UD based postags
+    
+    # So what're the most common nouns? verbs?
       
-      nokia_cooc_gen <- cooccurrence(x = x$lemma, 
-                                     relevant = x$upos %in% c("NOUN", "ADJ"))
-      wordnetwork <- head(nokia_cooc, 50)
+      # Sentence Co-occurrences for nouns or adj only
+      nokia_cooc <- cooccurrence(   	# try `?cooccurrence` for parm options
+      x = subset(x, upos %in% c(input$checkGroup)), 
+      term = "lemma", 
+      group = c("doc_id", "paragraph_id", "sentence_id"))  # 0.02 secs
+      
+      wordnetwork <- head(nokia_cooc, input$clusters)
       wordnetwork <- igraph::graph_from_data_frame(wordnetwork) # needs edgelist in first 2 colms.
       
       ggraph(wordnetwork, layout = "fr") +  
@@ -48,25 +59,52 @@ shinyServer(function(input, output) {
         theme_graph(base_family = "Arial Narrow") +  
         theme(legend.position = "none") +
         
-        labs(title = "Cooccurrences within 3 words distance", subtitle = "Nouns & Adjective")
+        labs(title = "Cooccurrences within 3 words distance", subtitle = input$checkGroup)
       
       
-    }
-    data.pca <- prcomp(Dataset(),center = TRUE,scale. = TRUE)
-    plot(data.pca, type = "l"); abline(h=1)    
+      #all_verbs = x %>% subset(., upos %in% "VERB") 
+      #top_verbs = txt_freq(all_verbs$lemma)
+      
+      #all_adjectives = x %>% subset(., upos %in% "ADJ") 
+      #top_adjectives = txt_freq(all_adjectives$lemma)
+
+      #all_propernoun = x %>% subset(., upos %in% "NNP") 
+      #top_propernoun = txt_freq(all_propernoun$lemma)
+      
+      #all_adverb = x %>% subset(., upos %in% "ADV") 
+      #top_adverb = txt_freq(all_adverb$lemma)
+      
+      
+      
+      
+        #nokia_cooc <- cooccurrence(   	# try `?cooccurrence` for parm options
+        #x = subset(x, upos %in% c(input$checkGroup)), 
+        #term = "lemma", 
+        #group = c("doc_id", "paragraph_id", "sentence_id"))
+        
+        
+        #wordnetwork <- head(nokia_cooc, 50)
+        #wordnetwork <- igraph::graph_from_data_frame(wordnetwork) # needs edgelist in first 2 colms.
+        
+        #ggraph(wordnetwork, layout = "fr") +  
+          
+        #geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = "orange") +  
+        #geom_node_text(aes(label = name), col = "darkgreen", size = 4) +
+          
+        #theme_graph(base_family = "Arial Narrow") +  
+        #theme(legend.position = "none")
+        
+        
+        #labs(title = "Cooccurrences within 3 words distance", subtitle = input$checkGroup)
+    #hist(c(1:10))
+    
+    
   })
   
-  clusters <- reactive({
-    kmeans(Dataset(), input$clusters)
-  })
   
-  output$clust_summary = renderTable({
-    out = data.frame(Cluser = row.names(clusters()$centers),clusters()$centers)
-    out
-  })
   
-  output$clust_data = renderDataTable({
-    out = data.frame(row_name = row.names(Dataset()),Dataset(),Cluster = clusters()$cluster)
+  output$clust_data = renderText({
+    out = Dataset()
     out
   })
   

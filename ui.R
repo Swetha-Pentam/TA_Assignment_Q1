@@ -33,9 +33,10 @@ shinyUI(
         
         
         checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
-                           choices = list("Adjective (JJ)" = 1, "Noun(NN)" = 2, "Proper Noun (NNP)" = 3,"Adverb (RB)" = 4,"erb (VB)"=5),
-                           selected = c(1,2,3)),   # end of sidebar panel
+                           choices = list("Adjective (JJ)" = 'ADJ', "Noun(NN)" = 'NOUN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'ADV',"Verb (VB)"='VERB'),
+                           selected = c('ADJ','NOUN','NNP')),   # end of sidebar panel
         
+        numericInput("clusters", 'Select the number of words', 50,min = 1, max = 100     ),
         fluidRow(column(3, verbatimTextOutput("value")))),
       
       mainPanel(
@@ -55,13 +56,10 @@ shinyUI(
                                'and upload only text file. You can also upload the trained data. click on',
                                span(strong("Choose tarined data")))),
                     tabPanel("Cooccurrance graph", 
-                             plotOutput('plot1')),
-                    
-                    tabPanel("Table Output",
-                             tableOutput('clust_summary')),
+                             plotOutput("plot1")),
                     
                     tabPanel("Data",
-                               dataTableOutput('clust_data'))
+                               dataTableOutput("clust_data"))
                     
         ) # end of tabsetPanel
       )# end of main panel
