@@ -8,7 +8,7 @@
 #
 
 library(shiny)
-
+rm(list=ls())
 # Define UI for application that draws a histogram
 shinyUI(
   fluidPage(
@@ -36,7 +36,7 @@ shinyUI(
                            choices = list("Adjective (JJ)" = 'ADJ', "Noun(NN)" = 'NOUN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'ADV',"Verb (VB)"='VERB'),
                            selected = c('ADJ','NOUN','NNP')),   # end of sidebar panel
         
-        numericInput("clusters", 'Select the number of words', 50,min = 1, max = 100     ),
+        numericInput("clusters", 'Select the number of words', 50,min = 1, max = 150),
         fluidRow(column(3, verbatimTextOutput("value")))),
       
       mainPanel(
@@ -45,21 +45,22 @@ shinyUI(
                     
                     tabPanel("Overview",
                              h4(p("Data input")),
-                             p("This app supports only comma separated values (.csv) data file. CSV data file should have headers and the first column of the file should have row names.",align="justify"),
-                             p("Please refer to the link below for sample csv file."),
-                             a(href="https://github.com/sudhir-voleti/sample-data-sets/blob/master/Segmentation%20Discriminant%20and%20targeting%20data/ConneCtorPDASegmentation.csv"
-                               ,"Sample data input file"),   
+                             p("This app supports only .txt files data file.",align="justify"),
                              br(),
                              h4('How to use this App'),
                              p('To use this app, click on', 
                                span(strong("Choose text file")),
                                'and upload only text file. You can also upload the trained data. click on',
-                               span(strong("Choose tarined data")))),
+                               span(strong("Choose trained UDPipe model."))), 
+                              p('There is also a provision to choose the number of words to be displayed on the co-occurrance graph and the WordCloud. ',
+                                'To choose the number of words enter any number between 1 t0 100 in', 
+                                span(strong("Select the number of words")))),
+                    
                     tabPanel("Cooccurrance graph", 
                              plotOutput("plot1")),
                     
-                    tabPanel("Data",
-                               dataTableOutput("clust_data"))
+                    tabPanel("WordCloud",
+                             plotOutput("plot2"))
                     
         ) # end of tabsetPanel
       )# end of main panel

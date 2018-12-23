@@ -4,6 +4,7 @@ if (!require(lattice)){install.packages("lattice")}
 if (!require(igraph)){install.packages("igraph")}
 if (!require(ggraph)){install.packages("ggraph")}
 if (!require(wordcloud)){install.packages("wordcloud")}
+if (!require(cld3)){install.packages("cld3")}
 
 library(udpipe)
 library(textrank)
@@ -13,6 +14,9 @@ library(ggraph)
 library(ggplot2)
 library(wordcloud)
 library(stringr)
+library(cld3)
+
+
 
 ud_model_english <- udpipe_download_model(language = "english")  # 3.05 secs
 ud_model_spanish <- udpipe_download_model(language = "spanish")  #  secs
