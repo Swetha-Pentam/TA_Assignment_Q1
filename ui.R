@@ -24,8 +24,8 @@ shinyUI(
         
         
         checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
-                           choices = list("Adjective (JJ)" = 'JJ', "Noun(NN)" = 'NN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'RB',"Verb (VB)"='VB'),
-                           selected = c('JJ','NN','NNP')),   # end of sidebar panel
+                           choices = list("Adjective (JJ)" = 'ADJ', "Noun(NN)" = 'NOUN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'ADV',"Verb (VB)"='VBN'),
+                           selected = c('ADJ','NOUN','NNP')),   # end of sidebar panel
         
         numericInput("clusters", 'Select the number of words', 50,min = 1, max = 150),
         fluidRow(column(3, verbatimTextOutput("value")))),
