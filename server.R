@@ -65,9 +65,11 @@ shinyServer(function(input, output) {
     
     
       #Sentence Co-occurrences for nouns or adj only
-      nokia_cooc <- cooccurrence(
+    
+    nokia_cooc <- cooccurrence(
         # try `?cooccurrence` for parm options
-      x = subset(Dataset(), upos %in% c(input$checkGroup)), 
+      
+      x = subset(y, upos %in% c(input$checkGroup)), 
       term = "lemma", 
       group = c("doc_id", "paragraph_id", "sentence_id"))  # 0.02 secs
       
@@ -77,7 +79,7 @@ shinyServer(function(input, output) {
       ggraph(wordnetwork, layout = "fr") +  
         
       geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = "orange") +  
-      geom_node_text(aes(label = name), col = "darkgreen", size = 4) +
+      geom_node_text(aes(label = name), col = "darkgreen", size = 10) +
         
       theme_graph(base_family = "Arial Narrow") +  
       theme(legend.position = "none") +
@@ -98,7 +100,7 @@ shinyServer(function(input, output) {
     #windowsFonts(devanew=windowsFont("Devanagari new normal"))
     # So what're the most common nouns? verbs?
     
-    y = subset(Dataset(), upos %in% c(input$checkGroup))
+    y = subset(y, upos %in% c(input$checkGroup))
     # Sentence Co-occurrences for nouns or adj only
     library(wordcloud)
     top_words = txt_freq(y$lemma)
@@ -108,7 +110,7 @@ shinyServer(function(input, output) {
               min.freq = 2, 
               max.words = input$clusters,
               random.order = FALSE, 
-              colors = brewer.pal(6, "Dark2"),size=10)
+              colors = brewer.pal(9, "Dark2"),size=11)
     
     
   })
