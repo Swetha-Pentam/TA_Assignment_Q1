@@ -20,18 +20,7 @@ shinyServer(function(input, output) {
         if (is.null(input$file2)) {   # locate 'file1' from ui.R
           
         return(NULL) } else {
-        #ip1 = readLines(input$file1$datapath)
-        
-        library(rvest)
-        
-        url = 'https://hi.wikipedia.org/wiki/%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4'
-        
-        
-        page = read_html(url)
-        nodes  = html_nodes(page,'p')
-        text = html_text(nodes)
-        ip1 = text[text != '']
-        
+        ip1 = readLines(input$file1$datapath)
         
         language <-  detect_language(ip1)
         
@@ -40,8 +29,6 @@ shinyServer(function(input, output) {
         
         ip  =  str_replace_all(ip1, "<.*?>", "")
         
-        #data(brussels_reviews)
-        #model_name = udpipe_load_model(brussels_reviews)  # file_model only needed
         model <- udpipe_load_model(input$file2$datapath)
         model_name = udpipe_load_model(model)  # file_model only needed
         
@@ -56,35 +43,24 @@ shinyServer(function(input, output) {
   
   output$plot1 = renderPlot({
     
-    
-      #table(x$xpos)  # std penn treebank based POStags
-      #table(x$upos)  # UD based postags
-      #windowsFonts(devanew=windowsFont("Devanagari new normal"))
-      #So what're the most common nouns? verbs?
-      
-    
-    
-      #Sentence Co-occurrences for nouns or adj only
-    
-    nokia_cooc <- cooccurrence(
-        # try `?cooccurrence` for parm options
-      
+      cooc <- cooccurrence(
+        
       x = subset(y, upos %in% c(input$checkGroup)), 
       term = "lemma", 
       group = c("doc_id", "paragraph_id", "sentence_id"))  # 0.02 secs
       
-      wordnetwork <- head(nokia_cooc, input$clusters)
+      wordnetwork <- head(cooc, input$clusters)
       wordnetwork <- igraph::graph_from_data_frame(wordnetwork) # needs edgelist in first 2 colms.
       
       ggraph(wordnetwork, layout = "fr") +  
         
-      geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = "orange") +  
+      geom_edge_link(aes(width = cooc, edge_alpha = cooc), edge_colour = "red",lineend = "butt") +  
       geom_node_text(aes(label = name), col = "darkgreen", size = 10) +
         
       theme_graph(base_family = "Arial Narrow") +  
       theme(legend.position = "none") +
         
-      labs(title = "Cooccurrences within words distance", subtitle = input$checkGroup)
+      labs(title = "Cooccurrences within words distance")
         
       
     
@@ -105,15 +81,13 @@ shinyServer(function(input, output) {
     library(wordcloud)
     top_words = txt_freq(y$lemma)
     
-    wordcloud(words = top_words$key, 
+    wordcloud=wordcloud(words = top_words$key, 
               freq = top_words$freq, 
               min.freq = 2, 
               max.words = input$clusters,
               random.order = FALSE, 
               colors = brewer.pal(9, "Dark2"),size=11)
-    
-    
-  })
+      })
   
   
 })
