@@ -18,22 +18,14 @@ shinyUI(
       
       sidebarPanel(  
         
-        fileInput("file1", "Choose text File",
-                  multiple = FALSE,
-                  accept = c("text",
-                             "text",
-                             ".txt")),
-        
-        fileInput("file2", "Choose a trained data",
-                  multiple = FALSE,
-                  accept = c("text",
-                             "text",
-                             ".txt")),
+        fileInput("file1",label =  h4("Upload text File")),
+                  
+        fileInput("file2",label =  h4("Upload trained UDPipe model")),
         
         
         checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
-                           choices = list("Adjective (JJ)" = 'ADJ', "Noun(NN)" = 'NOUN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'ADV',"Verb (VB)"='VERB'),
-                           selected = c('ADJ','NOUN','NNP')),   # end of sidebar panel
+                           choices = list("Adjective (JJ)" = 'JJ', "Noun(NN)" = 'NN', "Proper Noun (NNP)" = 'NNP',"Adverb (RB)" = 'RB',"Verb (VB)"='VB'),
+                           selected = c('JJ','NN','NNP')),   # end of sidebar panel
         
         numericInput("clusters", 'Select the number of words', 50,min = 1, max = 150),
         fluidRow(column(3, verbatimTextOutput("value")))),
@@ -43,14 +35,17 @@ shinyUI(
         tabsetPanel(type = "tabs",
                     
                     tabPanel("Overview",
+                             
+                             h4(p("Problem Statement")),
+                             p("To build shiny apps using udpipe R package. Shiny app should have these features: Should be able to read any text file using standard upload functionality, Option to upload trained udpipe model for different languages, User should be able to select list of part-of-speech tags (XPOS) using check box for plotting co-occurrences, List of xpos required in app - adjective (JJ), noun(NN), proper noun (NNP), adverb (RB) and verb (VB) which are shown on the Side bar for selection"),
                              h4(p("Data input")),
-                             p("This app supports only .txt files data file.",align="justify"),
+                             p("This app supports only .txt files data file."),
                              br(),
                              h4('How to use this App'),
                              p('To use this app, click on', 
                                span(strong("Choose text file")),
                                'and upload only text file. You can also upload the trained data. click on',
-                               span(strong("Choose trained UDPipe model."))), 
+                               span(strong("Upload trained UDPipe model."))), 
                              p('There is also a provision to choose the number of words to be displayed on the co-occurrance graph and the WordCloud. ',
                                'To choose the number of words enter any number between 1 t0 100 in', 
                                span(strong("Select the number of words")))),
