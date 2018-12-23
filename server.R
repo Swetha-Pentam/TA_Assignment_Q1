@@ -27,12 +27,13 @@ shinyServer(function(input, output) {
         if (language[1] == "hi") {
           windowsFont(devanew=windowsFont("Devanagari new normal"))    }
         
-        ip  =  str_replace_all(ip1, "<.*?>", "")
+        ip2 = readLines(input$file2$datapath)
+        ip3  =  str_replace_all(ip2, "<.*?>", "")
         
-        model <- udpipe_load_model(input$file2$datapath)
-        model_name = udpipe_load_model(model)  # file_model only needed
+        model <- udpipe_load_model(ip3)
+        #model_name = udpipe_load_model(model)  # file_model only needed
         
-        x <- udpipe_annotate(model_name, x = ip)
+        x <- udpipe_annotate(model, x = ip)
         y <- as.data.frame(x)
         
         return(y)              }
@@ -76,10 +77,10 @@ shinyServer(function(input, output) {
     #windowsFonts(devanew=windowsFont("Devanagari new normal"))
     # So what're the most common nouns? verbs?
     
-    y = subset(y, upos %in% c(input$checkGroup))
+    z = subset(y, upos %in% c(input$checkGroup))
     # Sentence Co-occurrences for nouns or adj only
     library(wordcloud)
-    top_words = txt_freq(y$lemma)
+    top_words = txt_freq(z$lemma)
     
     wordcloud=wordcloud(words = top_words$key, 
               freq = top_words$freq, 

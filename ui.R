@@ -51,9 +51,9 @@ shinyUI(
                                span(strong("Choose text file")),
                                'and upload only text file. You can also upload the trained data. click on',
                                span(strong("Choose trained UDPipe model."))), 
-                              p('There is also a provision to choose the number of words to be displayed on the co-occurrance graph and the WordCloud. ',
-                                'To choose the number of words enter any number between 1 t0 100 in', 
-                                span(strong("Select the number of words")))),
+                             p('There is also a provision to choose the number of words to be displayed on the co-occurrance graph and the WordCloud. ',
+                               'To choose the number of words enter any number between 1 t0 100 in', 
+                               span(strong("Select the number of words")))),
                     
                     tabPanel("Cooccurrance graph", 
                              plotOutput("plot1")),
@@ -66,5 +66,4 @@ shinyUI(
     ) # end of sidebarLayout
   )  # end if fluidPage
 ) # end of UI
-
 
